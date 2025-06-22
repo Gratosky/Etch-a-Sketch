@@ -12,27 +12,79 @@
         border: 1px solid black;
         width: 400px;
         height: 400px;
-        gap: 2px;
+        gap: var(--grid-gap, 2px);
       }
 
       /* Define the grid cell styles */
       .cell {
         border: 1px solid black;
         background-color: lightgray;
-        flex-grow: 1;
+        box-sizing: border-box;
+      }
+      button {
+        margin: 10px;
+        width: auto;
       }
     </style>
   </head>
   <body>
+    <button>Click Me!</button>
     <div class="grid"></div>
     <script>
       const grid = document.querySelector(".grid");
       let gridSize = 4;
+      let cells = [];
+      const button = document.querySelector("button");
+      const cellsPerRow = prompt(`Enter a number
+      `);
 
-      for (let i = 0; i < 16; i++) {
-        const cell = document.createElement("div");
-        cell.classList.add("cell");
-        grid.appendChild(cell);
+      function createGrid(cellsPerRow) {
+        grid.innerHTML = "";
+
+        const gapSize = 2;
+        const cellBasis = `calc(100% - ${
+          cellsPerRow - 1 * gapSize
+        }px / ${cellsPerRow})`;
+
+        grid.style.setProperty("--cells-per-row", cellsPerRow);
+        grid.style.setProperty("--gap-size", `${gapSize}px`);
+
+        for (let i = 0; i < cellsPerRow * cellsPerRow; i++) {
+          const cell = document.createElement("div");
+          cell.classList.add("cell");
+          cell.style.flexBasis = cellBasis;
+          grid.appendChild(cell);
+          cells.push(cell);
+        }
+
+        cell.addEventListener("mouseover", (e) => {
+          e.target.style.backgroundColor = "blue";
+        });
+      }
+      createGrid(6);
+
+      cells.forEach((cell) => {
+        cell.addEventListener("mouseenter", function (e) {
+          e.target.style.backgroundColor = "green";
+
+          setTimeout(() => {
+            e.target.style.backgroundColor = "lightgray";
+          }, 500);
+        });
+      });
+
+      button.addEventListener("click", function (e) {
+        e.target = userInput();
+      });
+
+      function userInput(cellsPerRow) {
+        cellsPerRow = prompt(
+          "Please enter a number to select size of square grid"
+        );
+
+        if (input <= 0 || input > 100) {
+          console.log(`Please enter a number between 1 and 100`);
+        }
       }
     </script>
   </body>
