@@ -35,19 +35,17 @@
       let gridSize = 4;
       let cells = [];
       const button = document.querySelector("button");
-      const cellsPerRow = prompt(`Enter a number
-      `);
 
       function createGrid(cellsPerRow) {
         grid.innerHTML = "";
-
+        cells = [];
         const gapSize = 2;
-        const cellBasis = `calc(100% - ${
-          cellsPerRow - 1 * gapSize
-        }px / ${cellsPerRow})`;
+        const totalGapSpace = (cellsPerRow - 1) * gapSize;
+
+        const cellBasis = `calc((100% - ${totalGapSpace}px) / ${cellsPerRow})`;
 
         grid.style.setProperty("--cells-per-row", cellsPerRow);
-        grid.style.setProperty("--gap-size", `${gapSize}px`);
+        grid.style.setProperty("--grid-gap", `${gapSize}px`);
 
         for (let i = 0; i < cellsPerRow * cellsPerRow; i++) {
           const cell = document.createElement("div");
@@ -55,15 +53,20 @@
           cell.style.flexBasis = cellBasis;
           grid.appendChild(cell);
           cells.push(cell);
+
+          cell.addEventListener("mouseover", (e) => {
+            const hoveredCell = e.target;
+            hoveredCell.style.backgroundColor = "blue";
+
+            setTimeout(() => {
+              e.target.style.backgroundColor = "lightgray";
+            }, 500);
+          });
         }
-
-        cell.addEventListener("mouseover", (e) => {
-          e.target.style.backgroundColor = "blue";
-        });
       }
-      createGrid(6);
+      //createGrid(6);
 
-      cells.forEach((cell) => {
+      /*cells.forEach((cell) => {
         cell.addEventListener("mouseenter", function (e) {
           e.target.style.backgroundColor = "green";
 
@@ -71,21 +74,25 @@
             e.target.style.backgroundColor = "lightgray";
           }, 500);
         });
-      });
+      });*/
 
       button.addEventListener("click", function (e) {
-        e.target = userInput();
+        userInputAndCreateGrid();
       });
 
-      function userInput(cellsPerRow) {
-        cellsPerRow = prompt(
+      function userInputAndCreateGrid() {
+        const input = prompt(
           "Please enter a number to select size of square grid"
         );
-
+        const parsedInt = parseInt(input, 10);
         if (input <= 0 || input > 100) {
           console.log(`Please enter a number between 1 and 100`);
+          return;
         }
+
+        createGrid(parsedInt);
       }
+      createGrid(gridSize);
     </script>
   </body>
 </html>
